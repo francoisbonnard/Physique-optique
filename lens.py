@@ -30,3 +30,19 @@ class Lens:
             self.focal_length += 40
         else:
             self.focal_length -= 40
+
+    def get_image_properties(self, object_position, object_height):
+        """Calcule la position et la hauteur de l'image formée par l'objet à travers cette lentille."""
+        u = self.x - object_position
+        f = self.focal_length
+        v_inv = (1/f) + (1/u)
+        v = 1/v_inv
+        image_position = self.x + v
+        m = -v/u
+        image_height = m * object_height
+        return image_position, image_height
+
+    def transform_object(self, object_position, object_height):
+        """Mise à jour de la position et de la hauteur de l'objet en passant par cette lentille."""
+        image_position, image_height = self.get_image_properties(object_position, object_height)
+        return image_position, image_height
