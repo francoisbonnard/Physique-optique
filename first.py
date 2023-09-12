@@ -13,6 +13,7 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 BACKGROUND_COLOR = (0, 0, 0)
 
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Repère orthonormé avec grille")
 
@@ -33,20 +34,26 @@ def main():
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
+                
+                # Vérifier si le clic est sur un objet vertical existant
+                clicked_object = next((obj for obj in vertical_objects if abs(obj.x - x) <= 5), None)
+                clicked_lens = next((l for l in lenses if abs(l.x - x) <= 5), None)
+                
                 if event.button == 1:  # Bouton gauche
-                    # Vérifier si le clic est sur un objet vertical existant
-                    clicked_object = next((obj for obj in vertical_objects if abs(obj.x - x) <= 5), None)
                     if clicked_object:
                         clicked_object.adjust_height(increment=False)
+                    elif clicked_lens:
+                        clicked_lens.adjust_focal_length(increment=True)
                     else:
-                        lenses.append(Lens(x, HEIGHT))
+                        lenses.append(Lens(x, HEIGHT, lens_height=300))
                 elif event.button == 3:  # Bouton droit
-                    # Vérifier si le clic est sur un objet vertical existant
-                    clicked_object = next((obj for obj in vertical_objects if abs(obj.x - x) <= 5), None)
                     if clicked_object:
                         clicked_object.adjust_height(increment=True)
+                    elif clicked_lens:
+                        clicked_lens.adjust_focal_length(increment=False)
                     else:
                         vertical_objects.append(VerticalObject(x, HEIGHT))
+
 
 
         for lens in lenses:
